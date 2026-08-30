@@ -1,0 +1,2290 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio & CMS Admin | Creative Developer & Designer</title>
+    
+    <!-- Google Fonts: Inter Family -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* ==========================================================================
+           1. DESIGN SYSTEM & VARIABLES (FIGMA STYLE)
+           ========================================================================== */
+        :root {
+            --bg-page: #F8FAFC;
+            --bg-surface: #FFFFFF;
+            --bg-subtle: #F1F5F9;
+            
+            --text-main: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #64748B;
+            --text-light: #94A3B8;
+            
+            --brand-primary: #2563EB;
+            --brand-hover: #1D4ED8;
+            --brand-light: #EFF6FF;
+            --brand-border: #BFDBFE;
+            
+            --accent-danger: #EF4444;
+            --accent-success: #10B981;
+            
+            --border-color: #E2E8F0;
+            --border-hover: #CBD5E1;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            
+            --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+            --shadow-sm: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
+            --shadow-md: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+            --shadow-lg: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+            
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        input, textarea, select {
+            font-family: inherit;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(248, 250, 252, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.125rem;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--brand-primary);
+            color: #FFFFFF;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 800;
+            transition: var(--transition-fast);
+        }
+
+        .nav-menu {
+            display: none;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-link {
+            font-size: 0.938rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition-fast);
+        }
+
+        .nav-link:hover {
+            color: var(--brand-primary);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn-cms-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--text-main);
+            color: #FFFFFF;
+            border-radius: var(--radius-full);
+            font-size: 0.813rem;
+            font-weight: 600;
+            transition: var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .btn-cms-toggle:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            font-size: 0.813rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-success);
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .mobile-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            background: var(--bg-surface);
+            color: var(--text-main);
+        }
+
+        .mobile-drawer {
+            display: none;
+            position: fixed;
+            top: 72px;
+            left: 0;
+            width: 100%;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px;
+            box-shadow: var(--shadow-md);
+            z-index: 99;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .mobile-drawer.open {
+            display: flex;
+        }
+
+        .mobile-drawer .nav-link {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--bg-subtle);
+            font-size: 1rem;
+        }
+
+        .hero {
+            padding: 40px 0 32px;
+        }
+
+        .hero-wrapper {
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 24px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--brand-light);
+            border: 1px solid var(--brand-border);
+            color: var(--brand-primary);
+            border-radius: var(--radius-full);
+            font-size: 0.813rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .hero-title {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            color: var(--text-main);
+            margin-bottom: 16px;
+        }
+
+        .hero-title span {
+            color: var(--brand-primary);
+        }
+
+        .hero-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 680px;
+            margin-bottom: 28px;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 32px;
+            width: 100%;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-size: 0.938rem;
+            font-weight: 600;
+            transition: var(--transition-normal);
+            text-align: center;
+            white-space: nowrap;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--brand-primary);
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background: var(--brand-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-subtle);
+        }
+
+        .btn-danger {
+            background: var(--accent-danger);
+            color: #FFFFFF;
+        }
+
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.813rem;
+            border-radius: var(--radius-sm);
+            width: auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .stat-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-xs);
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--brand-primary);
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .hero-avatar-block {
+            text-align: center;
+        }
+
+        .hero-avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--bg-surface);
+            box-shadow: var(--shadow-lg);
+            outline: 2px solid var(--brand-primary);
+        }
+
+        .controls-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .filter-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            font-size: 0.813rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition-fast);
+        }
+
+        .filter-chip.active, .filter-chip:hover {
+            background: var(--brand-primary);
+            color: #FFFFFF;
+            border-color: var(--brand-primary);
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 14px 10px 42px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            background: var(--bg-surface);
+            font-size: 0.875rem;
+            outline: none;
+            transition: var(--transition-fast);
+        }
+
+        .search-input:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px var(--brand-light);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .project-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-normal);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-hover);
+        }
+
+        .card-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            background: var(--bg-subtle);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover .card-image {
+            transform: scale(1.03);
+        }
+
+        .card-featured-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            color: #FBBF24;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .card-content {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .tech-tag {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            background: var(--bg-subtle);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+        }
+
+        .card-title {
+            font-size: 1.063rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .card-description {
+            font-size: 0.844rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            flex-grow: 1;
+            line-height: 1.5;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+        }
+
+        .btn-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.844rem;
+            font-weight: 600;
+            color: var(--brand-primary);
+        }
+
+        .btn-link:hover {
+            color: var(--brand-hover);
+        }
+
+        .btn-icon-only {
+            padding: 6px;
+            color: var(--text-muted);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+        }
+
+        .btn-icon-only:hover {
+            color: var(--text-main);
+            background: var(--bg-subtle);
+        }
+
+        .empty-state {
+            display: none;
+            text-align: center;
+            padding: 48px 20px;
+            background: var(--bg-surface);
+            border: 1px dashed var(--border-color);
+            border-radius: var(--radius-lg);
+            margin-top: 20px;
+        }
+
+        .empty-icon {
+            width: 40px;
+            height: 40px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .about-section {
+            padding: 48px 0;
+            margin-top: 48px;
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .skills-category-title {
+            font-size: 1.063rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: var(--text-main);
+        }
+
+        .skills-flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--bg-page);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.813rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .contact-section {
+            padding: 48px 0;
+        }
+
+        .contact-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.813rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            background: var(--bg-page);
+            font-size: 0.875rem;
+            color: var(--text-main);
+            outline: none;
+            transition: var(--transition-fast);
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px var(--brand-light);
+            background: var(--bg-surface);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .footer {
+            border-top: 1px solid var(--border-color);
+            padding: 32px 0;
+            background: var(--bg-surface);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 0.813rem;
+            color: var(--text-muted);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: var(--transition-fast);
+        }
+
+        .social-btn:hover {
+            background: var(--brand-light);
+            border-color: var(--brand-border);
+            color: var(--brand-primary);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-container {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 560px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-container.lg {
+            max-width: 840px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            background: var(--bg-subtle);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+            margin-bottom: 14px;
+        }
+
+        /* BOMB DEFUSAL GAME & AUTH STYLING */
+        .step-progress {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .step-dot {
+            width: 28px;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            transition: var(--transition-normal);
+        }
+
+        .step-dot.active {
+            background: var(--brand-primary);
+        }
+
+        .bomb-container {
+            background: #1E293B;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            color: #FFFFFF;
+            text-align: center;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .bomb-timer {
+            font-family: monospace;
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #EF4444;
+            background: #0F172A;
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            letter-spacing: 4px;
+            margin-bottom: 14px;
+            display: inline-block;
+            border: 1px solid #334155;
+        }
+
+        .wires-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .wire-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 0.813rem;
+            color: #ffffff;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .wire-green { background: #15803D; }
+        .wire-red { background: #B91C1C; }
+        .wire-blue { background: #1D4ED8; }
+        .wire-yellow { background: #B45309; }
+
+        .wire-btn.cut {
+            opacity: 0.35;
+            text-decoration: line-through;
+            pointer-events: none;
+            filter: grayscale(80%);
+        }
+
+        /* CMS DASHBOARD TABS & TABLES */
+        .cms-nav-tabs {
+            display: flex;
+            gap: 6px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 16px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .cms-nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cms-tab-btn {
+            padding: 8px 12px;
+            font-size: 0.813rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+        }
+
+        .cms-tab-btn.active {
+            color: var(--brand-primary);
+            border-bottom-color: var(--brand-primary);
+        }
+
+        .cms-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.813rem;
+        }
+
+        .cms-table th, .cms-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .cms-table th {
+            background: var(--bg-subtle);
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* COLOR PICKER */
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-picker-input {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            background: none;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            left: 20px;
+            background: var(--text-main);
+            color: #FFFFFF;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            font-size: 0.813rem;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 300;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        @media (min-width: 640px) {
+            .btn { width: auto; }
+            .hero-actions { flex-direction: row; width: auto; }
+            .hero-title { font-size: 2.75rem; }
+            .stats-grid { grid-template-columns: repeat(4, 1fr); }
+            .controls-wrapper { flex-direction: row; justify-content: space-between; align-items: center; }
+            .search-box { max-width: 280px; }
+            .projects-grid { grid-template-columns: repeat(2, 1fr); }
+            .contact-card { padding: 32px; }
+            .footer-content { flex-direction: row; justify-content: space-between; }
+            .toast { left: auto; max-width: 400px; }
+        }
+
+        @media (min-width: 1024px) {
+            .nav-menu { display: flex; }
+            .mobile-toggle { display: none; }
+            .hero { padding: 64px 0 48px; }
+            .hero-wrapper { flex-direction: row; align-items: center; justify-content: space-between; gap: 48px; }
+            .hero-text-block { flex: 1; }
+            .hero-title { font-size: 3.25rem; }
+            .hero-avatar-block { display: block; flex-shrink: 0; }
+            .hero-avatar { width: 160px; height: 160px; }
+            .projects-grid { grid-template-columns: repeat(3, 1fr); }
+            .about-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container nav-container">
+            <a href="#" class="brand-logo">
+                <div class="brand-icon" id="brandIconChar">D</div>
+                <span class="siteBrandName">Darren N.M</span>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="nav-menu">
+                <a href="#projects" class="nav-link">Project</a>
+                <a href="#about" class="nav-link">Tentang Saya</a>
+                <a href="#skills" class="nav-link">Keahlian</a>
+                <a href="#contact" class="nav-link">Kontak</a>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="btn-cms-toggle" onclick="openCMSAuthModal()">
+                    <i data-lucide="shield-check" style="width: 15px; height: 15px;"></i>
+                    <span>Admin CMS</span>
+                </button>
+
+                <div class="btn-status">
+                    <span class="status-dot"></span>
+                    <span id="statusBadgeText">Open to Work</span>
+                </div>
+
+                <button class="mobile-toggle" id="menuToggle" aria-label="Toggle Navigation">
+                    <i data-lucide="menu" style="width: 20px; height: 20px;"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Navigation -->
+        <div class="mobile-drawer" id="mobileDrawer">
+            <a href="#projects" class="nav-link mobile-nav-item">Project</a>
+            <a href="#about" class="nav-link mobile-nav-item">Tentang Saya</a>
+            <a href="#skills" class="nav-link mobile-nav-item">Keahlian</a>
+            <a href="#contact" class="nav-link mobile-nav-item">Kontak</a>
+            <button class="btn-cms-toggle" onclick="openCMSAuthModal()" style="margin-top: 8px;">
+                <i data-lucide="shield-check" style="width: 15px; height: 15px;"></i>
+                <span>Admin Panel</span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-wrapper">
+                    <div class="hero-text-block">
+                        <div class="hero-badge">
+                            <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i>
+                            <span id="heroRoleBadge">Frontend Engineer & UI/UX Designer</span>
+                        </div>
+                        
+                        <h1 class="hero-title" id="heroTitle">
+                            Membangun Produk Digital <span>Fungsional & Estetis</span>.
+                        </h1>
+                        
+                        <p class="hero-description" id="heroDescription">
+                            Halo! Saya Darren N.M, seorang developer & designer yang berfokus menciptakan solusi web modern, responsif, dan mudah digunakan.
+                        </p>
+
+                        <div class="hero-actions">
+                            <a href="#projects" class="btn btn-primary">
+                                Lihat Project <i data-lucide="arrow-down" style="width: 18px; height: 18px;"></i>
+                            </a>
+                            <a href="#contact" class="btn btn-outline">
+                                Hubungi Saya <i data-lucide="mail" style="width: 18px; height: 18px;"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Hero Avatar / Profile Picture -->
+                    <div class="hero-avatar-block">
+                        <img id="heroAvatarImg" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Profile Picture" class="hero-avatar">
+                    </div>
+                </div>
+
+                <!-- Stats Highlights -->
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="statCompleted">12+</div>
+                        <div class="stat-label">Project Selesai</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statYears">3+</div>
+                        <div class="stat-label">Tahun Pengalaman</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statResponsive">100%</div>
+                        <div class="stat-label">Responsif & Mobile First</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statRating">5★</div>
+                        <div class="stat-label">Standar Kualitas Kode</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container" id="projects" style="padding-top: 40px;">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">Portofolio Project</h2>
+                    <p class="section-subtitle">Jelajahi karya aplikasi web, sistem interface, dan eksplorasi desain yang telah dibuat.</p>
+                </div>
+            </div>
+
+            <!-- CONTROLS: FILTER CHIPS & SEARCH BAR -->
+            <div class="controls-wrapper">
+                <div class="filter-tabs" id="filterTabs">
+                    <button class="filter-chip active" data-filter="all">Semua Project</button>
+                    <button class="filter-chip" data-filter="web">Web App</button>
+                    <button class="filter-chip" data-filter="ui">UI/UX Design</button>
+                    <button class="filter-chip" data-filter="mobile">Mobile</button>
+                </div>
+
+                <div class="search-box">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Cari project atau teknologi...">
+                </div>
+            </div>
+
+            <!-- PROJECT GRID CONTAINER -->
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Dynamically populated from State -->
+            </div>
+
+            <!-- EMPTY STATE SEARCH -->
+            <div class="empty-state" id="emptyState">
+                <i data-lucide="folder-search" class="empty-icon"></i>
+                <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 4px;">Tidak ada project ditemukan</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem;">Coba gunakan kata kunci pencarian lain atau pilih kategori lain.</p>
+            </div>
+        </section>
+
+        <section class="about-section" id="about">
+            <div class="container">
+                <div class="about-grid">
+                    <div class="about-text">
+                        <h2 class="section-title" style="margin-bottom: 16px;">Tentang Saya</h2>
+                        <div id="aboutTextContainer" style="color: var(--text-secondary); white-space: pre-wrap; font-size: 0.938rem;">
+                            <p>Saya adalah pengembang web dan perancang antarmuka yang antusias dalam menciptakan produk digital yang fungsional dan estetis.</p>
+                        </div>
+                    </div>
+
+                    <div class="skills-group" id="skills">
+                        <h3 class="skills-category-title">Teknologi & Tools</h3>
+                        <div class="skills-flex" id="skillsContainer">
+                            <!-- Skill Chips populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact-section" id="contact">
+            <div class="container">
+                <div class="contact-card">
+                    <h2 class="section-title" style="margin-bottom: 8px;">Hubungi Saya</h2>
+                    <p class="section-subtitle" style="margin-bottom: 24px;">Punya ide project menarik atau ingin berdiskusi? Silakan kirim pesan melalui form di bawah ini.</p>
+                    
+                    <form id="contactForm" onsubmit="handleFormSubmit(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="name">Nama Lengkap</label>
+                            <input type="text" id="name" class="form-input" placeholder="Masukkan nama Anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email</label>
+                            <input type="email" id="email" class="form-input" placeholder="nama@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="message">Pesan / Requirement</label>
+                            <textarea id="message" class="form-textarea" placeholder="Tuliskan pesan Anda di sini..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            Kirim Pesan <i data-lucide="send" style="width: 16px; height: 16px;"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-text">
+                &copy; <span id="currentYear">2026</span> <span class="siteBrandName">Darren N.M</span>. All rights reserved.
+            </div>
+            <div class="social-links">
+                <a href="#" id="socialGithub" class="social-btn" target="_blank" aria-label="GitHub"><i data-lucide="github" style="width: 18px; height: 18px;"></i></a>
+                <a href="#" id="socialLinkedin" class="social-btn" target="_blank" aria-label="LinkedIn"><i data-lucide="linkedin" style="width: 18px; height: 18px;"></i></a>
+                <a href="#" id="socialTwitter" class="social-btn" target="_blank" aria-label="Twitter"><i data-lucide="twitter" style="width: 18px; height: 18px;"></i></a>
+                <a href="#" id="socialInstagram" class="social-btn" target="_blank" aria-label="Instagram"><i data-lucide="instagram" style="width: 18px; height: 18px;"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal-overlay" id="projectModal" onclick="closeModalOnOverlay(event)">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeModal('projectModal')" aria-label="Close modal">
+                <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+            </button>
+            <div class="modal-body" id="modalContent">
+                <!-- Content populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN CMS AUTH MODAL (3-STEP VERIFICATION) -->
+    <div class="modal-overlay" id="cmsAuthModal" onclick="closeModalOnOverlay(event)">
+        <div class="modal-container" style="max-width: 440px;">
+            <button class="modal-close" onclick="closeCMSAuthModal()" aria-label="Close modal">
+                <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+            </button>
+            <div class="modal-body">
+                
+                <!-- Step Indicator -->
+                <div class="step-progress">
+                    <div class="step-dot active" id="dotStep1"></div>
+                    <div class="step-dot" id="dotStep2"></div>
+                    <div class="step-dot" id="dotStep3"></div>
+                </div>
+
+                <!-- STEP 1: PASSWORD -->
+                <div id="authStep1">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="width: 48px; height: 48px; background: var(--brand-light); color: var(--brand-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+                            <i data-lucide="lock" style="width: 24px; height: 24px;"></i>
+                        </div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700;">Step 1: Verifikasi Password</h3>
+                        <p style="font-size: 0.844rem; color: var(--text-secondary); margin-top: 4px;">Masukkan password pengelola CMS untuk melanjutkan.</p>
+                    </div>
+
+                    <form onsubmit="handleCMSAuthStep1(event)">
+                        <div class="form-group">
+                            <input type="password" id="cmsPinInput" class="form-input" placeholder="Masukkan Password Admin" style="text-align: center; font-size: 1.125rem; letter-spacing: 4px;" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Lanjut ke Step 2 <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i></button>
+                    </form>
+                </div>
+
+                <!-- STEP 2: SECURITY QUESTIONS -->
+                <div id="authStep2" style="display: none;">
+                    <div style="text-align: center; margin-bottom: 16px;">
+                        <div style="width: 48px; height: 48px; background: #FEF3C7; color: #D97706; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+                            <i data-lucide="help-circle" style="width: 24px; height: 24px;"></i>
+                        </div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700;">Step 2: Pertanyaan Keamanan</h3>
+                        <p style="font-size: 0.844rem; color: var(--text-secondary); margin-top: 4px;">Jawab 3 pertanyaan berikut dengan benar.</p>
+                    </div>
+
+                    <form onsubmit="handleCMSAuthStep2(event)">
+                        <div class="form-group">
+                            <label class="form-label" style="font-size: 0.813rem;">1. Karakter kesukaan kamu:</label>
+                            <input type="text" id="q1Input" class="form-input" placeholder="Jawaban..." required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="font-size: 0.813rem;">2. Buah apa yang mirip dengan margo:</label>
+                            <input type="text" id="q2Input" class="form-input" placeholder="Jawaban..." required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="font-size: 0.813rem;">3. Ulang tahun aku:</label>
+                            <input type="text" id="q3Input" class="form-input" placeholder="Jawaban..." required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Lanjut ke Step 3 <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i></button>
+                    </form>
+                </div>
+
+                <!-- STEP 3: BOMB DEFUSAL GAME -->
+                <div id="authStep3" style="display: none;">
+                    <div style="text-align: center; margin-bottom: 16px;">
+                        <h3 style="font-size: 1.25rem; font-weight: 800; color: #ef4444;">💣 Step 3: Defuse The Bomb!</h3>
+                        <p style="font-size: 0.813rem; color: var(--text-secondary);">Potong <b>2 kabel yang benar</b> (Kuning & Biru) sebelum waktu habis!</p>
+                    </div>
+
+                    <div class="bomb-container">
+                        <div class="bomb-timer" id="bombTimerDisplay">00:30</div>
+
+                        <div class="wires-grid">
+                            <button class="wire-btn wire-green" id="wireGreen" onclick="cutWire('ijo')">
+                                <span>🟢 Hijau</span> <i data-lucide="scissors" style="width: 16px; height: 16px;"></i>
+                            </button>
+                            <button class="wire-btn wire-red" id="wireRed" onclick="cutWire('merah')">
+                                <span>🔴 Merah</span> <i data-lucide="scissors" style="width: 16px; height: 16px;"></i>
+                            </button>
+                            <button class="wire-btn wire-blue" id="wireBlue" onclick="cutWire('biru')">
+                                <span>🔵 Biru</span> <i data-lucide="scissors" style="width: 16px; height: 16px;"></i>
+                            </button>
+                            <button class="wire-btn wire-yellow" id="wireYellow" onclick="cutWire('kuning')">
+                                <span>🟡 Kuning</span> <i data-lucide="scissors" style="width: 16px; height: 16px;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- CMS MAIN DASHBOARD MODAL -->
+    <div class="modal-overlay" id="cmsDashboardModal">
+        <div class="modal-container lg">
+            <button class="modal-close" onclick="closeModal('cmsDashboardModal')" aria-label="Close modal">
+                <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+            </button>
+            <div class="modal-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                    <div>
+                        <h2 style="font-size: 1.375rem; font-weight: 800;">Content Management System</h2>
+                        <p style="font-size: 0.813rem; color: var(--text-secondary);">Kelola seluruh konten portofolio Anda secara otomatis.</p>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="closeModal('cmsDashboardModal')">
+                        <i data-lucide="log-out" style="width: 14px; height: 14px;"></i> Keluar Admin
+                    </button>
+                </div>
+
+                <!-- CMS Tabs Nav -->
+                <div class="cms-nav-tabs">
+                    <button class="cms-tab-btn active" onclick="switchCMSTab('projects', this)">📁 Kelola Project</button>
+                    <button class="cms-tab-btn" onclick="switchCMSTab('hero', this)">👤 Profile & Warna Text</button>
+                    <button class="cms-tab-btn" onclick="switchCMSTab('skills', this)">🛠️ Keahlian & Skills</button>
+                    <button class="cms-tab-btn" onclick="switchCMSTab('inbox', this)">📥 Pesan Masuk <span id="inboxBadge" style="background: var(--accent-danger); color:#fff; font-size:11px; padding:2px 6px; border-radius:10px;">0</span></button>
+                </div>
+
+                <!-- TAB 1: PROJECTS MANAGER -->
+                <div id="cmsTabProjects" class="cms-tab-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 style="font-size: 1.063rem; font-weight: 700;">Daftar Project</h3>
+                        <button class="btn btn-primary btn-sm" onclick="openProjectFormModal()">
+                            <i data-lucide="plus" style="width: 14px; height: 14px;"></i> Tambah Project Baru
+                        </button>
+                    </div>
+                    
+                    <div style="overflow-x: auto;">
+                        <table class="cms-table">
+                            <thead>
+                                <tr>
+                                    <th>Project</th>
+                                    <th>Kategori</th>
+                                    <th>Featured</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cmsProjectsTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TAB 2: HERO & PROFILE SETTINGS -->
+                <div id="cmsTabHero" class="cms-tab-content" style="display: none;">
+                    <form onsubmit="saveHeroSettings(event)">
+                        <h4 style="font-weight: 700; margin-bottom: 12px; color: var(--brand-primary); font-size: 0.938rem;">🎨 Warna & Identitas Profil</h4>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                            <div class="form-group">
+                                <label class="form-label">Nama Pengguna / Brand Title</label>
+                                <input type="text" id="cmsBrandNameInput" class="form-input" placeholder="Contoh: Darren N.M" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Pilih Warna Utama (Theme/Accent Color)</label>
+                                <div class="color-picker-wrapper">
+                                    <input type="color" id="cmsBrandColorPicker" class="color-picker-input" value="#2563EB" onchange="syncColorInput(this.value)">
+                                    <input type="text" id="cmsBrandColorHex" class="form-input" value="#2563EB" placeholder="#2563EB" oninput="syncColorPicker(this.value)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">URL Foto Profil / Avatar</label>
+                            <input type="url" id="cmsAvatarUrlInput" class="form-input" placeholder="https://images.unsplash.com/..." required>
+                        </div>
+
+                        <h4 style="font-weight: 700; margin: 20px 0 12px; color: var(--brand-primary); font-size: 0.938rem;">📝 Informasi Hero & Bio</h4>
+
+                        <div class="form-group">
+                            <label class="form-label">Role Badge Text</label>
+                            <input type="text" id="cmsRoleBadge" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Judul Utama Hero (Gunakan &lt;span&gt;teks&lt;/span&gt; untuk warna aksen)</label>
+                            <input type="text" id="cmsHeroTitleInput" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Deskripsi Singkat Hero</label>
+                            <textarea id="cmsHeroDescInput" class="form-textarea" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status Ketersediaan (Badge Header)</label>
+                            <input type="text" id="cmsStatusBadgeInput" class="form-input" placeholder="Contoh: Open to Work" required>
+                        </div>
+
+                        <h4 style="font-weight: 700; margin: 20px 0 12px; color: var(--brand-primary); font-size: 0.938rem;">🔗 Tautan Social Media</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                            <div class="form-group">
+                                <label class="form-label">GitHub URL</label>
+                                <input type="url" id="cmsGithubInput" class="form-input" placeholder="https://github.com/..." required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">LinkedIn URL</label>
+                                <input type="url" id="cmsLinkedinInput" class="form-input" placeholder="https://linkedin.com/in/..." required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Twitter / X URL</label>
+                                <input type="url" id="cmsTwitterInput" class="form-input" placeholder="https://twitter.com/..." required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Instagram URL</label>
+                                <input type="url" id="cmsInstagramInput" class="form-input" placeholder="https://instagram.com/..." required>
+                            </div>
+                        </div>
+
+                        <h4 style="font-weight: 700; margin: 20px 0 12px; color: var(--brand-primary); font-size: 0.938rem;">📊 Metrik / Angka Statistik</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;">
+                            <div class="form-group">
+                                <label class="form-label">Project Selesai</label>
+                                <input type="text" id="cmsStatCompleted" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Tahun Pengalaman</label>
+                                <input type="text" id="cmsStatYears" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Responsive Standard</label>
+                                <input type="text" id="cmsStatResponsive" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Kualitas Kode</label>
+                                <input type="text" id="cmsStatRating" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Teks Paragraf Tentang Saya</label>
+                            <textarea id="cmsAboutTextInput" class="form-textarea" style="min-height: 100px;" required></textarea>
+                        </div>
+
+                        <div style="display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap;">
+                            <button type="submit" class="btn btn-primary" style="flex: 1;">Simpan Perubahan Profile & Warna</button>
+                            <button type="button" class="btn btn-outline" onclick="resetToDefaultData()" style="color: var(--accent-danger); border-color: var(--accent-danger);">Reset Ke Data Default</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- TAB 3: SKILLS MANAGER -->
+                <div id="cmsTabSkills" class="cms-tab-content" style="display: none;">
+                    <div style="display: flex; gap: 8px; margin-bottom: 20px;">
+                        <input type="text" id="newSkillInput" class="form-input" placeholder="Nama Skill baru (contoh: TypeScript, Vue.js)">
+                        <button class="btn btn-primary btn-sm" onclick="addSkillFromCMS()">Tambah</button>
+                    </div>
+
+                    <h4 style="font-weight: 700; margin-bottom: 12px; font-size: 0.938rem;">Skill Saat Ini:</h4>
+                    <div class="skills-flex" id="cmsSkillsListContainer">
+                        <!-- Dynamic Skills chips with delete buttons -->
+                    </div>
+                </div>
+
+                <!-- TAB 4: INBOX / PESAN MASUK -->
+                <div id="cmsTabInbox" class="cms-tab-content" style="display: none;">
+                    <h3 style="font-size: 1.063rem; font-weight: 700; margin-bottom: 16px;">Pesan Masuk dari Pengunjung</h3>
+                    <div id="cmsInboxContainer" style="display: flex; flex-direction: column; gap: 12px;">
+                        <!-- Messages list populated dynamically -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- CMS ADD/EDIT PROJECT FORM MODAL -->
+    <div class="modal-overlay" id="cmsProjectFormModal" onclick="closeModalOnOverlay(event)">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeModal('cmsProjectFormModal')" aria-label="Close modal">
+                <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+            </button>
+            <div class="modal-body">
+                <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 16px;" id="cmsProjectFormTitle">Tambah Project Baru</h3>
+                <form id="cmsProjectForm" onsubmit="saveProjectFromCMS(event)">
+                    <input type="hidden" id="projectFormId">
+                    
+                    <div class="form-group">
+                        <label class="form-label">Judul Project</label>
+                        <input type="text" id="projectFormTitleInput" class="form-input" placeholder="Judul Aplikasi / Project" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Kategori</label>
+                        <select id="projectFormCategorySelect" class="form-select" required>
+                            <option value="web">Web Application</option>
+                            <option value="ui">UI/UX Design</option>
+                            <option value="mobile">Mobile Application</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">URL Gambar Showcase</label>
+                        <input type="url" id="projectFormImageInput" class="form-input" placeholder="https://images.unsplash.com/..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Teknologi Digunakan (Pisahkan dengan koma)</label>
+                        <input type="text" id="projectFormTagsInput" class="form-input" placeholder="React, Tailwind CSS, REST API" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Deskripsi Ringkas</label>
+                        <textarea id="projectFormDescInput" class="form-textarea" placeholder="Tuliskan gambaran umum project..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Fitur-fitur Utama (Satu baris per fitur)</label>
+                        <textarea id="projectFormFeaturesInput" class="form-textarea" placeholder="Visualisasi data interaktif&#10;Mode gelap & terang&#10;Export laporan PDF"></textarea>
+                    </div>
+
+                    <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" id="projectFormFeaturedCheckbox" style="width: 18px; height: 18px;">
+                        <label for="projectFormFeaturedCheckbox" style="font-weight: 600; font-size: 0.813rem;">Tampilkan Badge "Featured"</label>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary" style="flex:1;">Simpan Project</button>
+                        <button type="button" class="btn btn-outline" onclick="closeModal('cmsProjectFormModal')">Batal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast" id="toast">
+        <i data-lucide="check-circle-2" style="width: 20px; height: 20px; color: var(--accent-success);"></i>
+        <span id="toastMessage">Operasi berhasil dilakukan!</span>
+    </div>
+
+    <script>
+        // Local Storage Keys
+        const STORAGE_KEYS = {
+            PROJECTS: 'portfolio_cms_projects_v2',
+            SETTINGS: 'portfolio_cms_settings_v2',
+            SKILLS: 'portfolio_cms_skills_v2',
+            MESSAGES: 'portfolio_cms_messages_v2'
+        };
+
+        // Data Default (Auto-Seed jika kosong)
+        const defaultProjects = [
+            {
+                id: "project1",
+                title: "Portofolio Pou (Gemini AI)",
+                category: "web",
+                image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+                tags: ["HTML5", "Vanilla JS", "Tailwind CSS"],
+                description: "Platform pemantauan analitik data penjualan real-time dengan sistem chart interaktif dan export laporan PDF.",
+                features: ["Visualisasi Data Interaktif", "Mode Gelap & Terang Otomatis", "Export Laporan ke Format PDF / CSV"],
+                featured: true
+            },
+            {
+                id: "project2",
+                title: "Fintech Mobile Wallet App",
+                category: "ui",
+                image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80",
+                tags: ["Figma", "UI/UX", "Design System"],
+                description: "Desain interface dompet digital modern berfokus pada kemudahan transfer uang dan penganggaran otomatis.",
+                features: ["Sistem Komponen Figma Berbasis Variable", "Uji Usabilitas Pengguna", "Prototip Interaktif"],
+                featured: false
+            },
+            {
+                id: "project3",
+                title: "Modern E-Commerce Storefront",
+                category: "web",
+                image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=800&q=80",
+                tags: ["Next.js", "TypeScript", "Stripe"],
+                description: "Toko online minimalis berkecepatan tinggi dilengkapi integrasi payment gateway dan filter produk serba cepat.",
+                features: ["Pencarian Produk Instan", "Integrasi Pembayaran Stripe Gateway", "Server-Side Rendering (SSR)"],
+                featured: true
+            }
+        ];
+
+        const defaultHeroSettings = {
+            brandName: "Darren N.M",
+            brandColor: "#2563EB",
+            avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+            roleBadge: "Frontend Engineer & UI/UX Designer",
+            title: "Membangun Produk Digital <span>Fungsional & Estetis</span>.",
+            description: "Halo! Saya Darren N.M, seorang developer & designer yang berfokus menciptakan solusi web modern, responsif, dan mudah digunakan. Berikut adalah kumpulan karya dan project terbaik saya.",
+            statusBadge: "Open to Work",
+            githubUrl: "https://github.com/D27rren",
+            linkedinUrl: "https://linkedin.com",
+            twitterUrl: "https://twitter.com",
+            instagramUrl: "https://instagram.com",
+            statCompleted: "12+",
+            statYears: "3+",
+            statResponsive: "100%",
+            statRating: "5★",
+            aboutText: "Saya adalah pengembang web dan perancang antarmuka yang antusias dalam menciptakan produk digital yang tidak hanya fungsional tetapi juga memberikan pengalaman pengguna (user experience) yang luar biasa.\n\nDengan pendekatan Mobile-First dan berpatokan pada sistem desain yang konsisten, saya selalu memastikan setiap baris kode mudah dirawat dan setiap piksel desain tertata dengan presisi tinggi."
+        };
+
+        const defaultSkills = [
+            "HTML5 / CSS3", "JavaScript (ES6+)", "React / Next.js", "Tailwind CSS",
+            "Figma Design", "Git & GitHub", "Responsive Design", "REST API"
+        ];
+
+        // Helper Storage
+        function loadStorage(key, fallback) {
+            try {
+                const saved = localStorage.getItem(key);
+                return saved ? JSON.parse(saved) : fallback;
+            } catch (e) {
+                console.warn("Storage Load Error:", e);
+                return fallback;
+            }
+        }
+
+        function saveStorage(key, data) {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+            } catch (e) {
+                console.warn("Storage Save Error:", e);
+            }
+        }
+
+        // Global Application State
+        let localProjects = loadStorage(STORAGE_KEYS.PROJECTS, [...defaultProjects]);
+        let localSettings = loadStorage(STORAGE_KEYS.SETTINGS, { ...defaultHeroSettings });
+        let localSkills = loadStorage(STORAGE_KEYS.SKILLS, [...defaultSkills]);
+        let localMessages = loadStorage(STORAGE_KEYS.MESSAGES, []);
+
+        let currentFilter = 'all';
+        let currentSearch = '';
+
+        // Dynamic Brand Theme Color Setter
+        function applyDynamicBrandColor(hex) {
+            if (!hex || !/^#[0-9A-F]{6}$/i.test(hex)) return;
+            document.documentElement.style.setProperty('--brand-primary', hex);
+            document.documentElement.style.setProperty('--brand-hover', hex + 'E6');
+            document.documentElement.style.setProperty('--brand-light', hex + '15');
+            document.documentElement.style.setProperty('--brand-border', hex + '40');
+        }
+
+        // Render Hero, Brand & About Content
+        function renderHeroAndAbout() {
+            applyDynamicBrandColor(localSettings.brandColor);
+
+            // Brand Names
+            document.querySelectorAll('.siteBrandName').forEach(el => {
+                el.textContent = localSettings.brandName || "Darren N.M";
+            });
+
+            // Brand Logo Icon First Character
+            const iconChar = (localSettings.brandName || "D").charAt(0).toUpperCase();
+            const brandIcon = document.getElementById('brandIconChar');
+            if (brandIcon) brandIcon.textContent = iconChar;
+
+            // Hero Elements
+            document.getElementById('heroRoleBadge').textContent = localSettings.roleBadge || defaultHeroSettings.roleBadge;
+            document.getElementById('heroTitle').innerHTML = localSettings.title || defaultHeroSettings.title;
+            document.getElementById('heroDescription').textContent = localSettings.description || defaultHeroSettings.description;
+            document.getElementById('statusBadgeText').textContent = localSettings.statusBadge || defaultHeroSettings.statusBadge;
+
+            // Avatar
+            const avatarImg = document.getElementById('heroAvatarImg');
+            if (avatarImg) avatarImg.src = localSettings.avatarUrl || defaultHeroSettings.avatarUrl;
+
+            // Social links
+            document.getElementById('socialGithub').href = localSettings.githubUrl || "#";
+            document.getElementById('socialLinkedin').href = localSettings.linkedinUrl || "#";
+            document.getElementById('socialTwitter').href = localSettings.twitterUrl || "#";
+            document.getElementById('socialInstagram').href = localSettings.instagramUrl || "#";
+
+            // Stats
+            document.getElementById('statCompleted').textContent = localSettings.statCompleted || "12+";
+            document.getElementById('statYears').textContent = localSettings.statYears || "3+";
+            document.getElementById('statResponsive').textContent = localSettings.statResponsive || "100%";
+            document.getElementById('statRating').textContent = localSettings.statRating || "5★";
+
+            // About text
+            document.getElementById('aboutTextContainer').textContent = localSettings.aboutText || defaultHeroSettings.aboutText;
+        }
+
+        function renderSkills() {
+            const container = document.getElementById('skillsContainer');
+            if (!container) return;
+            container.innerHTML = localSkills.map(skill => `
+                <div class="skill-chip">
+                    <i data-lucide="check-circle-2" style="width: 14px; height: 14px; color: var(--brand-primary);"></i>
+                    <span>${skill}</span>
+                </div>
+            `).join('');
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function applyCurrentFilterAndSearch() {
+            const cards = document.querySelectorAll('.project-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const category = card.getAttribute('data-category');
+                const titleAndTags = card.getAttribute('data-title') || '';
+                
+                const matchesFilter = (currentFilter === 'all' || category === currentFilter);
+                const matchesSearch = (!currentSearch || titleAndTags.includes(currentSearch.toLowerCase()));
+
+                if (matchesFilter && matchesSearch) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            const emptyState = document.getElementById('emptyState');
+            if (emptyState) {
+                emptyState.style.display = (visibleCount === 0 && localProjects.length > 0) ? 'block' : 'none';
+            }
+        }
+
+        function renderProjectsGrid() {
+            const grid = document.getElementById('projectsGrid');
+            const emptyState = document.getElementById('emptyState');
+
+            if (localProjects.length === 0) {
+                grid.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            grid.innerHTML = localProjects.map(proj => `
+                <article class="project-card" data-category="${proj.category}" data-title="${proj.title.toLowerCase()} ${(proj.tags || []).join(' ').toLowerCase()}">
+                    <div class="card-image-wrapper">
+                        <img src="${proj.image}" alt="${proj.title}" class="card-image" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80'">
+                        ${proj.featured ? `
+                            <span class="card-featured-badge">
+                                <i data-lucide="star" style="width: 12px; height: 12px; fill: currentColor;"></i> Featured
+                            </span>
+                        ` : ''}
+                    </div>
+                    <div class="card-content">
+                        <div class="card-meta">
+                            ${(proj.tags || []).map(t => `<span class="tech-tag">${t}</span>`).join('')}
+                        </div>
+                        <h3 class="card-title">${proj.title}</h3>
+                        <p class="card-description">${proj.description}</p>
+                        <div class="card-footer">
+                            <button class="btn-link" onclick="openModalDetail('${proj.id}')">
+                                Detail Project <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
+                            </button>
+                            <a href="#" class="btn-icon-only" title="Source Code">
+                                <i data-lucide="external-link" style="width: 18px; height: 18px;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+            
+            if (window.lucide) lucide.createIcons();
+            applyCurrentFilterAndSearch();
+        }
+
+        function renderCMSProjectsTable() {
+            const tbody = document.getElementById('cmsProjectsTableBody');
+            if (!tbody) return;
+            
+            tbody.innerHTML = localProjects.map(proj => `
+                <tr>
+                    <td style="font-weight: 600;">${proj.title}</td>
+                    <td><span class="tech-tag">${proj.category.toUpperCase()}</span></td>
+                    <td>${proj.featured ? '⭐ Ya' : 'Tidak'}</td>
+                    <td>
+                        <div style="display: flex; gap: 6px;">
+                            <button class="btn btn-outline btn-sm" onclick="editProjectFromCMS('${proj.id}')">Edit</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteProjectFromCMS('${proj.id}')">Hapus</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderCMSSkills() {
+            const container = document.getElementById('cmsSkillsListContainer');
+            if (!container) return;
+
+            container.innerHTML = localSkills.map((s, index) => `
+                <div class="skill-chip">
+                    <span>${s}</span>
+                    <button onclick="removeSkillFromCMS(${index})" style="color: var(--accent-danger); font-weight: bold; margin-left: 4px;">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function renderCMSInbox() {
+            const container = document.getElementById('cmsInboxContainer');
+            const badge = document.getElementById('inboxBadge');
+            if (!container) return;
+
+            badge.textContent = localMessages.length;
+
+            if (localMessages.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.875rem;">Belum ada pesan masuk dari pengunjung.</p>';
+                return;
+            }
+
+            container.innerHTML = localMessages.map(msg => `
+                <div style="background: var(--bg-page); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <h4 style="font-size: 0.875rem; font-weight: 700;">${msg.name} (${msg.email})</h4>
+                        <button class="btn btn-danger btn-sm" onclick="deleteMessageFromCMS('${msg.id}')">Hapus</button>
+                    </div>
+                    <p style="font-size: 0.813rem; color: var(--text-secondary); white-space: pre-wrap;">${msg.message}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderAllContent() {
+            renderHeroAndAbout();
+            renderSkills();
+            renderProjectsGrid();
+        }
+
+        // Color sync helper
+        function syncColorInput(val) {
+            document.getElementById('cmsBrandColorHex').value = val;
+        }
+
+        function syncColorPicker(val) {
+            if (/^#[0-9A-F]{6}$/i.test(val)) {
+                document.getElementById('cmsBrandColorPicker').value = val;
+            }
+        }
+
+        let bombInterval = null;
+        let bombSeconds = 30;
+        let cutWires = new Set();
+
+        function openCMSAuthModal() {
+            resetCMSAuthSteps();
+            document.getElementById('cmsAuthModal').classList.add('active');
+        }
+
+        function closeCMSAuthModal() {
+            stopBombTimer();
+            closeModal('cmsAuthModal');
+        }
+
+        function resetCMSAuthSteps() {
+            stopBombTimer();
+            cutWires.clear();
+            
+            document.getElementById('authStep1').style.display = 'block';
+            document.getElementById('authStep2').style.display = 'none';
+            document.getElementById('authStep3').style.display = 'none';
+
+            document.getElementById('dotStep1').classList.add('active');
+            document.getElementById('dotStep2').classList.remove('active');
+            document.getElementById('dotStep3').classList.remove('active');
+
+            document.getElementById('cmsPinInput').value = '';
+            document.getElementById('q1Input').value = '';
+            document.getElementById('q2Input').value = '';
+            document.getElementById('q3Input').value = '';
+
+            ['wireGreen', 'wireRed', 'wireBlue', 'wireYellow'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.classList.remove('cut');
+            });
+        }
+
+        function handleCMSAuthStep1(e) {
+            e.preventDefault();
+            const pin = document.getElementById('cmsPinInput').value.trim();
+            if (pin === '12345') {
+                document.getElementById('authStep1').style.display = 'none';
+                document.getElementById('authStep2').style.display = 'block';
+                document.getElementById('dotStep2').classList.add('active');
+                showToast("Password benar! Lanjut ke Step 2.");
+            } else {
+                showToast("Password Salah!");
+            }
+        }
+
+        function handleCMSAuthStep2(e) {
+            e.preventDefault();
+            const q1 = document.getElementById('q1Input').value.trim().toLowerCase();
+            const q2 = document.getElementById('q2Input').value.trim().toLowerCase();
+            const q3 = document.getElementById('q3Input').value.trim().toLowerCase();
+
+            const isQ1Correct = q1 === 'pou';
+            const isQ2Correct = q2 === 'mangga';
+            const isQ3Correct = q3 === 'november 27 2012' || q3 === '27 november 2012';
+
+            if (isQ1Correct && isQ2Correct && isQ3Correct) {
+                document.getElementById('authStep2').style.display = 'none';
+                document.getElementById('authStep3').style.display = 'block';
+                document.getElementById('dotStep3').classList.add('active');
+                showToast("Jawaban tepat! Memulai Bomb Defusal Game...");
+                startBombGame();
+            } else {
+                showToast("Jawaban pertanyaan keamanan ada yang salah!");
+            }
+        }
+
+        function startBombGame() {
+            bombSeconds = 30;
+            cutWires.clear();
+            updateBombTimerDisplay();
+
+            clearInterval(bombInterval);
+            bombInterval = setInterval(() => {
+                bombSeconds--;
+                updateBombTimerDisplay();
+
+                if (bombSeconds <= 0) {
+                    stopBombTimer();
+                    showToast("💥 BOOM! Waktu habis, bom meledak! Verifikasi gagal.");
+                    resetCMSAuthSteps();
+                }
+            }, 1000);
+        }
+
+        function stopBombTimer() {
+            if (bombInterval) clearInterval(bombInterval);
+        }
+
+        function updateBombTimerDisplay() {
+            const display = document.getElementById('bombTimerDisplay');
+            if (!display) return;
+            const secs = bombSeconds < 10 ? '0' + bombSeconds : bombSeconds;
+            display.textContent = `00:${secs}`;
+        }
+
+        function cutWire(color) {
+            if (cutWires.has(color)) return;
+
+            let btnId = '';
+            if (color === 'ijo') btnId = 'wireGreen';
+            if (color === 'merah') btnId = 'wireRed';
+            if (color === 'biru') btnId = 'wireBlue';
+            if (color === 'kuning') btnId = 'wireYellow';
+
+            const btn = document.getElementById(btnId);
+            if (btn) btn.classList.add('cut');
+
+            cutWires.add(color);
+
+            // Jika kabel salah dipotong
+            if (color === 'ijo' || color === 'merah') {
+                stopBombTimer();
+                showToast("💥 BOOM! Anda memotong kabel yang salah! Verifikasi gagal.");
+                setTimeout(() => {
+                    resetCMSAuthSteps();
+                }, 1000);
+                return;
+            }
+
+            // Jika kedua kabel benar telah dipotong (Kuning & Biru)
+            if (cutWires.has('kuning') && cutWires.has('biru')) {
+                stopBombTimer();
+                showToast("🎉 BOM BERHASIL DIDETEKSI & DIJINAKKAN! Akses CMS Diberikan.");
+                setTimeout(() => {
+                    closeModal('cmsAuthModal');
+                    openCMSDashboard();
+                }, 800);
+            }
+        }
+
+        function openCMSDashboard() {
+            document.getElementById('cmsDashboardModal').classList.add('active');
+            switchCMSTab('projects');
+
+            document.getElementById('cmsBrandNameInput').value = localSettings.brandName || defaultHeroSettings.brandName;
+            document.getElementById('cmsBrandColorPicker').value = localSettings.brandColor || defaultHeroSettings.brandColor;
+            document.getElementById('cmsBrandColorHex').value = localSettings.brandColor || defaultHeroSettings.brandColor;
+            document.getElementById('cmsAvatarUrlInput').value = localSettings.avatarUrl || defaultHeroSettings.avatarUrl;
+
+            document.getElementById('cmsRoleBadge').value = localSettings.roleBadge || defaultHeroSettings.roleBadge;
+            document.getElementById('cmsHeroTitleInput').value = localSettings.title || defaultHeroSettings.title;
+            document.getElementById('cmsHeroDescInput').value = localSettings.description || defaultHeroSettings.description;
+            document.getElementById('cmsStatusBadgeInput').value = localSettings.statusBadge || defaultHeroSettings.statusBadge;
+
+            document.getElementById('cmsGithubInput').value = localSettings.githubUrl || defaultHeroSettings.githubUrl;
+            document.getElementById('cmsLinkedinInput').value = localSettings.linkedinUrl || defaultHeroSettings.linkedinUrl;
+            document.getElementById('cmsTwitterInput').value = localSettings.twitterUrl || defaultHeroSettings.twitterUrl;
+            document.getElementById('cmsInstagramInput').value = localSettings.instagramUrl || defaultHeroSettings.instagramUrl;
+
+            document.getElementById('cmsStatCompleted').value = localSettings.statCompleted || "12+";
+            document.getElementById('cmsStatYears').value = localSettings.statYears || "3+";
+            document.getElementById('cmsStatResponsive').value = localSettings.statResponsive || "100%";
+            document.getElementById('cmsStatRating').value = localSettings.statRating || "5★";
+            document.getElementById('cmsAboutTextInput').value = localSettings.aboutText || defaultHeroSettings.aboutText;
+
+            renderCMSProjectsTable();
+            renderCMSSkills();
+            renderCMSInbox();
+        }
+
+        function switchCMSTab(tabName, btnElement) {
+            const tabs = ['projects', 'hero', 'skills', 'inbox'];
+            tabs.forEach(t => {
+                const tabContent = document.getElementById(`cmsTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+                if (tabContent) tabContent.style.display = 'none';
+            });
+
+            const targetContent = document.getElementById(`cmsTab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+            if (targetContent) targetContent.style.display = 'block';
+
+            const tabBtns = document.querySelectorAll('.cms-tab-btn');
+            tabBtns.forEach(btn => btn.classList.remove('active'));
+            if (btnElement) {
+                btnElement.classList.add('active');
+            } else {
+                const index = tabs.indexOf(tabName);
+                if (index !== -1 && tabBtns[index]) tabBtns[index].classList.add('active');
+            }
+        }
+
+        function saveHeroSettings(e) {
+            e.preventDefault();
+            
+            localSettings.brandName = document.getElementById('cmsBrandNameInput').value.trim();
+            localSettings.brandColor = document.getElementById('cmsBrandColorHex').value.trim();
+            localSettings.avatarUrl = document.getElementById('cmsAvatarUrlInput').value.trim();
+            localSettings.roleBadge = document.getElementById('cmsRoleBadge').value.trim();
+            localSettings.title = document.getElementById('cmsHeroTitleInput').value.trim();
+            localSettings.description = document.getElementById('cmsHeroDescInput').value.trim();
+            localSettings.statusBadge = document.getElementById('cmsStatusBadgeInput').value.trim();
+
+            localSettings.githubUrl = document.getElementById('cmsGithubInput').value.trim();
+            localSettings.linkedinUrl = document.getElementById('cmsLinkedinInput').value.trim();
+            localSettings.twitterUrl = document.getElementById('cmsTwitterInput').value.trim();
+            localSettings.instagramUrl = document.getElementById('cmsInstagramInput').value.trim();
+
+            localSettings.statCompleted = document.getElementById('cmsStatCompleted').value.trim();
+            localSettings.statYears = document.getElementById('cmsStatYears').value.trim();
+            localSettings.statResponsive = document.getElementById('cmsStatResponsive').value.trim();
+            localSettings.statRating = document.getElementById('cmsStatRating').value.trim();
+            localSettings.aboutText = document.getElementById('cmsAboutTextInput').value.trim();
+
+            saveStorage(STORAGE_KEYS.SETTINGS, localSettings);
+            renderHeroAndAbout();
+            showToast("Profil & warna berhasil diperbarui!");
+        }
+
+        function addSkillFromCMS() {
+            const input = document.getElementById('newSkillInput');
+            const skillName = input.value.trim();
+            if (!skillName) return;
+
+            localSkills.push(skillName);
+            saveStorage(STORAGE_KEYS.SKILLS, localSkills);
+            input.value = '';
+            
+            renderSkills();
+            renderCMSSkills();
+            showToast(`Skill "${skillName}" ditambahkan!`);
+        }
+
+        function removeSkillFromCMS(index) {
+            const removed = localSkills.splice(index, 1);
+            saveStorage(STORAGE_KEYS.SKILLS, localSkills);
+            renderSkills();
+            renderCMSSkills();
+            showToast(`Skill "${removed[0]}" dihapus.`);
+        }
+
+        function resetToDefaultData() {
+            if (confirm("Apakah Anda yakin ingin mengembalikan semua data ke pengaturan default?")) {
+                localProjects = [...defaultProjects];
+                localSettings = { ...defaultHeroSettings };
+                localSkills = [...defaultSkills];
+                localMessages = [];
+
+                saveStorage(STORAGE_KEYS.PROJECTS, localProjects);
+                saveStorage(STORAGE_KEYS.SETTINGS, localSettings);
+                saveStorage(STORAGE_KEYS.SKILLS, localSkills);
+                saveStorage(STORAGE_KEYS.MESSAGES, localMessages);
+
+                renderAllContent();
+                openCMSDashboard();
+                showToast("Semua data berhasil di-reset ke default.");
+            }
+        }
+
+        function openProjectFormModal(id = null) {
+            const formTitle = document.getElementById('cmsProjectFormTitle');
+            const form = document.getElementById('cmsProjectForm');
+            form.reset();
+
+            if (id) {
+                const proj = localProjects.find(p => p.id === id);
+                if (proj) {
+                    formTitle.textContent = "Edit Project";
+                    document.getElementById('projectFormId').value = proj.id;
+                    document.getElementById('projectFormTitleInput').value = proj.title;
+                    document.getElementById('projectFormCategorySelect').value = proj.category;
+                    document.getElementById('projectFormImageInput').value = proj.image;
+                    document.getElementById('projectFormTagsInput').value = (proj.tags || []).join(', ');
+                    document.getElementById('projectFormDescInput').value = proj.description;
+                    document.getElementById('projectFormFeaturesInput').value = (proj.features || []).join('\n');
+                    document.getElementById('projectFormFeaturedCheckbox').checked = proj.featured;
+                }
+            } else {
+                formTitle.textContent = "Tambah Project Baru";
+                document.getElementById('projectFormId').value = '';
+            }
+
+            document.getElementById('cmsProjectFormModal').classList.add('active');
+        }
+
+        function editProjectFromCMS(id) {
+            openProjectFormModal(id);
+        }
+
+        function saveProjectFromCMS(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('projectFormId').value;
+            const title = document.getElementById('projectFormTitleInput').value.trim();
+            const category = document.getElementById('projectFormCategorySelect').value;
+            const image = document.getElementById('projectFormImageInput').value.trim();
+            const tags = document.getElementById('projectFormTagsInput').value.split(',').map(t => t.trim()).filter(Boolean);
+            const description = document.getElementById('projectFormDescInput').value.trim();
+            const features = document.getElementById('projectFormFeaturesInput').value.split('\n').map(f => f.trim()).filter(Boolean);
+            const featured = document.getElementById('projectFormFeaturedCheckbox').checked;
+
+            if (id) {
+                const index = localProjects.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    localProjects[index] = { id, title, category, image, tags, description, features, featured };
+                }
+            } else {
+                const newId = 'project_' + Date.now();
+                localProjects.unshift({ id: newId, title, category, image, tags, description, features, featured });
+            }
+
+            saveStorage(STORAGE_KEYS.PROJECTS, localProjects);
+            renderProjectsGrid();
+            renderCMSProjectsTable();
+            closeModal('cmsProjectFormModal');
+            showToast("Data project berhasil disimpan!");
+        }
+
+        function deleteProjectFromCMS(id) {
+            if (confirm("Hapus project ini dari daftar?")) {
+                localProjects = localProjects.filter(p => p.id !== id);
+                saveStorage(STORAGE_KEYS.PROJECTS, localProjects);
+                renderProjectsGrid();
+                renderCMSProjectsTable();
+                showToast("Project berhasil dihapus.");
+            }
+        }
+
+        function deleteMessageFromCMS(id) {
+            localMessages = localMessages.filter(m => m.id !== id);
+            saveStorage(STORAGE_KEYS.MESSAGES, localMessages);
+            renderCMSInbox();
+            showToast("Pesan berhasil dihapus.");
+        }
+
+        function openModalDetail(id) {
+            const proj = localProjects.find(p => p.id === id);
+            if (!proj) return;
+
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = `
+                <img src="${proj.image}" alt="${proj.title}" class="modal-image" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80'">
+                <div class="card-meta" style="margin-bottom: 12px;">
+                    ${(proj.tags || []).map(t => `<span class="tech-tag">${t}</span>`).join('')}
+                </div>
+                <h3 style="font-size: 1.375rem; font-weight: 800; margin-bottom: 8px;">${proj.title}</h3>
+                <p style="color: var(--text-secondary); font-size: 0.938rem; margin-bottom: 20px;">${proj.description}</p>
+                
+                ${(proj.features && proj.features.length > 0) ? `
+                    <h4 style="font-size: 0.938rem; font-weight: 700; margin-bottom: 10px; color: var(--text-main);">Fitur Utama & Keunggulan:</h4>
+                    <ul style="padding-left: 20px; color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 24px;">
+                        ${proj.features.map(f => `<li style="margin-bottom: 6px;">${f}</li>`).join('')}
+                    </ul>
+                ` : ''}
+
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <a href="#" class="btn btn-primary btn-sm" style="flex: 1;">
+                        <i data-lucide="globe" style="width: 14px; height: 14px;"></i> Live Demo
+                    </a>
+                    <a href="#" class="btn btn-outline btn-sm" style="flex: 1;">
+                        <i data-lucide="github" style="width: 14px; height: 14px;"></i> Repository Kode
+                    </a>
+                </div>
+            `;
+
+            document.getElementById('projectModal').classList.add('active');
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.remove('active');
+        }
+
+        function closeModalOnOverlay(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                e.target.classList.remove('active');
+                if (e.target.id === 'cmsAuthModal') stopBombTimer();
+            }
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            const newMessage = {
+                id: 'msg_' + Date.now(),
+                name,
+                email,
+                message,
+                date: new Date().toISOString()
+            };
+
+            localMessages.unshift(newMessage);
+            saveStorage(STORAGE_KEYS.MESSAGES, localMessages);
+
+            e.target.reset();
+            showToast("Pesan Anda telah dikirim! Terima kasih.");
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            if (!toast || !toastMessage) return;
+
+            toastMessage.textContent = msg;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // DOM Event Listeners & Initial Load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllContent();
+
+            // Mobile Menu Toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const mobileDrawer = document.getElementById('mobileDrawer');
+            if (menuToggle && mobileDrawer) {
+                menuToggle.addEventListener('click', () => {
+                    mobileDrawer.classList.toggle('open');
+                });
+
+                document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        mobileDrawer.classList.remove('open');
+                    });
+                });
+            }
+
+            // Category Filter Buttons
+            const filterTabs = document.getElementById('filterTabs');
+            if (filterTabs) {
+                filterTabs.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('filter-chip')) {
+                        document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
+                        e.target.classList.add('active');
+                        currentFilter = e.target.getAttribute('data-filter');
+                        applyCurrentFilterAndSearch();
+                    }
+                });
+            }
+
+            // Search Bar Input Listener
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    currentSearch = e.target.value.trim();
+                    applyCurrentFilterAndSearch();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
