@@ -1316,7 +1316,7 @@
                         <h2 style="font-size: 1.375rem; font-weight: 800;">Content Management System</h2>
                         <p style="font-size: 0.813rem; color: var(--text-secondary);">Kelola seluruh konten portofolio Anda secara otomatis.</p>
                     </div>
-                    <button class="btn btn-outline btn-sm" onclick="closeModal('cmsDashboardModal')">
+                    <button class="btn btn-outline btn-sm" onclick="logoutCMS()">
                         <i data-lucide="log-out" style="width: 14px; height: 14px;"></i> Keluar Admin
                     </button>
                 </div>
@@ -1541,16 +1541,47 @@
         <span id="toastMessage">Operasi berhasil dilakukan!</span>
     </div>
 
-    <script>
-        // Local Storage Keys
-        const STORAGE_KEYS = {
-            PROJECTS: 'portfolio_cms_projects_v2',
-            SETTINGS: 'portfolio_cms_settings_v2',
-            SKILLS: 'portfolio_cms_skills_v2',
-            MESSAGES: 'portfolio_cms_messages_v2'
+    <script type="module">
+        // Import Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc, 
+            onSnapshot 
+        } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyD8AeMSbK2-6Mr-F8kYASvY0OyhtposZts",
+            authDomain: "myictportofolio.firebaseapp.com",
+            projectId: "myictportofolio",
+            storageBucket: "myictportofolio.firebasestorage.app",
+            messagingSenderId: "347236645855",
+            appId: "1:347236645855:web:ab3ff86c470e10de97a26a",
+            measurementId: "G-VTF143QW2M"
         };
 
-        // Data Default (Auto-Seed jika kosong)
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        try {
+            getAnalytics(app);
+        } catch (e) {
+            console.log("Analytics initialization skipped or not supported in this environment");
+        }
+        const db = getFirestore(app);
+
+        // Firestore Document References
+        const DOCS = {
+            PROJECTS: doc(db, "portfolio_data", "projects"),
+            SETTINGS: doc(db, "portfolio_data", "settings"),
+            SKILLS: doc(db, "portfolio_data", "skills"),
+            MESSAGES: doc(db, "portfolio_data", "messages")
+        };
+
+        // Data Default (Auto-Seed jika kosong di Firestore)
         const defaultProjects = [
             {
                 id: "project1",
@@ -1608,33 +1639,86 @@
             "Figma Design", "Git & GitHub", "Responsive Design", "REST API"
         ];
 
-        // Helper Storage
-        function loadStorage(key, fallback) {
-            try {
-                const saved = localStorage.getItem(key);
-                return saved ? JSON.parse(saved) : fallback;
-            } catch (e) {
-                console.warn("Storage Load Error:", e);
-                return fallback;
-            }
-        }
-
-        function saveStorage(key, data) {
-            try {
-                localStorage.setItem(key, JSON.stringify(data));
-            } catch (e) {
-                console.warn("Storage Save Error:", e);
-            }
-        }
-
         // Global Application State
-        let localProjects = loadStorage(STORAGE_KEYS.PROJECTS, [...defaultProjects]);
-        let localSettings = loadStorage(STORAGE_KEYS.SETTINGS, { ...defaultHeroSettings });
-        let localSkills = loadStorage(STORAGE_KEYS.SKILLS, [...defaultSkills]);
-        let localMessages = loadStorage(STORAGE_KEYS.MESSAGES, []);
+        let localProjects = [...defaultProjects];
+        let localSettings = { ...defaultHeroSettings };
+        let localSkills = [...defaultSkills];
+        let localMessages = [];
 
         let currentFilter = 'all';
         let currentSearch = '';
+
+        // Helper Firestore Save
+        async function saveToFirestore(docRef, data) {
+            try {
+                await setDoc(docRef, data);
+            } catch (err) {
+                console.error("Firestore Save Error:", err);
+                showToast("Peringatan: Gagal menyimpan data ke Firestore cloud.");
+            }
+        }
+
+        // Real-time Firestore Listeners & Auto-Seeding
+        function setupFirestoreListeners() {
+            // 1. Projects
+            onSnapshot(DOCS.PROJECTS, (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.data();
+                    if (Array.isArray(data.list)) {
+                        localProjects = data.list;
+                        renderProjectsGrid();
+                        renderCMSProjectsTable();
+                    }
+                } else {
+                    setDoc(DOCS.PROJECTS, { list: defaultProjects }).catch(e => console.warn(e));
+                }
+            }, (error) => {
+                console.warn("Firestore Projects listener:", error);
+            });
+
+            // 2. Settings
+            onSnapshot(DOCS.SETTINGS, (snapshot) => {
+                if (snapshot.exists()) {
+                    localSettings = { ...defaultHeroSettings, ...snapshot.data() };
+                    renderHeroAndAbout();
+                } else {
+                    setDoc(DOCS.SETTINGS, defaultHeroSettings).catch(e => console.warn(e));
+                }
+            }, (error) => {
+                console.warn("Firestore Settings listener:", error);
+            });
+
+            // 3. Skills
+            onSnapshot(DOCS.SKILLS, (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.data();
+                    if (Array.isArray(data.list)) {
+                        localSkills = data.list;
+                        renderSkills();
+                        renderCMSSkills();
+                    }
+                } else {
+                    setDoc(DOCS.SKILLS, { list: defaultSkills }).catch(e => console.warn(e));
+                }
+            }, (error) => {
+                console.warn("Firestore Skills listener:", error);
+            });
+
+            // 4. Messages
+            onSnapshot(DOCS.MESSAGES, (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.data();
+                    if (Array.isArray(data.list)) {
+                        localMessages = data.list;
+                        renderCMSInbox();
+                    }
+                } else {
+                    setDoc(DOCS.MESSAGES, { list: [] }).catch(e => console.warn(e));
+                }
+            }, (error) => {
+                console.warn("Firestore Messages listener:", error);
+            });
+        }
 
         // Dynamic Brand Theme Color Setter
         function applyDynamicBrandColor(hex) {
@@ -1660,29 +1744,51 @@
             if (brandIcon) brandIcon.textContent = iconChar;
 
             // Hero Elements
-            document.getElementById('heroRoleBadge').textContent = localSettings.roleBadge || defaultHeroSettings.roleBadge;
-            document.getElementById('heroTitle').innerHTML = localSettings.title || defaultHeroSettings.title;
-            document.getElementById('heroDescription').textContent = localSettings.description || defaultHeroSettings.description;
-            document.getElementById('statusBadgeText').textContent = localSettings.statusBadge || defaultHeroSettings.statusBadge;
+            const heroRoleBadge = document.getElementById('heroRoleBadge');
+            if (heroRoleBadge) heroRoleBadge.textContent = localSettings.roleBadge || defaultHeroSettings.roleBadge;
+
+            const heroTitle = document.getElementById('heroTitle');
+            if (heroTitle) heroTitle.innerHTML = localSettings.title || defaultHeroSettings.title;
+
+            const heroDescription = document.getElementById('heroDescription');
+            if (heroDescription) heroDescription.textContent = localSettings.description || defaultHeroSettings.description;
+
+            const statusBadgeText = document.getElementById('statusBadgeText');
+            if (statusBadgeText) statusBadgeText.textContent = localSettings.statusBadge || defaultHeroSettings.statusBadge;
 
             // Avatar
             const avatarImg = document.getElementById('heroAvatarImg');
             if (avatarImg) avatarImg.src = localSettings.avatarUrl || defaultHeroSettings.avatarUrl;
 
             // Social links
-            document.getElementById('socialGithub').href = localSettings.githubUrl || "#";
-            document.getElementById('socialLinkedin').href = localSettings.linkedinUrl || "#";
-            document.getElementById('socialTwitter').href = localSettings.twitterUrl || "#";
-            document.getElementById('socialInstagram').href = localSettings.instagramUrl || "#";
+            const socialGithub = document.getElementById('socialGithub');
+            if (socialGithub) socialGithub.href = localSettings.githubUrl || "#";
+
+            const socialLinkedin = document.getElementById('socialLinkedin');
+            if (socialLinkedin) socialLinkedin.href = localSettings.linkedinUrl || "#";
+
+            const socialTwitter = document.getElementById('socialTwitter');
+            if (socialTwitter) socialTwitter.href = localSettings.twitterUrl || "#";
+
+            const socialInstagram = document.getElementById('socialInstagram');
+            if (socialInstagram) socialInstagram.href = localSettings.instagramUrl || "#";
 
             // Stats
-            document.getElementById('statCompleted').textContent = localSettings.statCompleted || "12+";
-            document.getElementById('statYears').textContent = localSettings.statYears || "3+";
-            document.getElementById('statResponsive').textContent = localSettings.statResponsive || "100%";
-            document.getElementById('statRating').textContent = localSettings.statRating || "5★";
+            const statCompleted = document.getElementById('statCompleted');
+            if (statCompleted) statCompleted.textContent = localSettings.statCompleted || "12+";
+
+            const statYears = document.getElementById('statYears');
+            if (statYears) statYears.textContent = localSettings.statYears || "3+";
+
+            const statResponsive = document.getElementById('statResponsive');
+            if (statResponsive) statResponsive.textContent = localSettings.statResponsive || "100%";
+
+            const statRating = document.getElementById('statRating');
+            if (statRating) statRating.textContent = localSettings.statRating || "5★";
 
             // About text
-            document.getElementById('aboutTextContainer').textContent = localSettings.aboutText || defaultHeroSettings.aboutText;
+            const aboutTextContainer = document.getElementById('aboutTextContainer');
+            if (aboutTextContainer) aboutTextContainer.textContent = localSettings.aboutText || defaultHeroSettings.aboutText;
         }
 
         function renderSkills() {
@@ -1725,16 +1831,17 @@
         function renderProjectsGrid() {
             const grid = document.getElementById('projectsGrid');
             const emptyState = document.getElementById('emptyState');
+            if (!grid) return;
 
             if (localProjects.length === 0) {
                 grid.innerHTML = '';
-                emptyState.style.display = 'block';
+                if (emptyState) emptyState.style.display = 'block';
                 return;
             }
 
-            emptyState.style.display = 'none';
+            if (emptyState) emptyState.style.display = 'none';
             grid.innerHTML = localProjects.map(proj => `
-                <article class="project-card" data-category="${proj.category}" data-title="${proj.title.toLowerCase()} ${(proj.tags || []).join(' ').toLowerCase()}">
+                <article class="project-card" data-category="${proj.category}" data-title="${(proj.title || '').toLowerCase()} ${((proj.tags || []).join(' ')).toLowerCase()}">
                     <div class="card-image-wrapper">
                         <img src="${proj.image}" alt="${proj.title}" class="card-image" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80'">
                         ${proj.featured ? `
@@ -1772,7 +1879,7 @@
             tbody.innerHTML = localProjects.map(proj => `
                 <tr>
                     <td style="font-weight: 600;">${proj.title}</td>
-                    <td><span class="tech-tag">${proj.category.toUpperCase()}</span></td>
+                    <td><span class="tech-tag">${(proj.category || '').toUpperCase()}</span></td>
                     <td>${proj.featured ? '⭐ Ya' : 'Tidak'}</td>
                     <td>
                         <div style="display: flex; gap: 6px;">
@@ -1801,7 +1908,7 @@
             const badge = document.getElementById('inboxBadge');
             if (!container) return;
 
-            badge.textContent = localMessages.length;
+            if (badge) badge.textContent = localMessages.length;
 
             if (localMessages.length === 0) {
                 container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.875rem;">Belum ada pesan masuk dari pengunjung.</p>';
@@ -1827,20 +1934,27 @@
 
         // Color sync helper
         function syncColorInput(val) {
-            document.getElementById('cmsBrandColorHex').value = val;
+            const el = document.getElementById('cmsBrandColorHex');
+            if (el) el.value = val;
         }
 
         function syncColorPicker(val) {
             if (/^#[0-9A-F]{6}$/i.test(val)) {
-                document.getElementById('cmsBrandColorPicker').value = val;
+                const el = document.getElementById('cmsBrandColorPicker');
+                if (el) el.value = val;
             }
         }
 
+        let isCMSAuthenticated = sessionStorage.getItem('portfolio_cms_auth') === 'true';
         let bombInterval = null;
         let bombSeconds = 30;
         let cutWires = new Set();
 
         function openCMSAuthModal() {
+            if (isCMSAuthenticated) {
+                openCMSDashboard();
+                return;
+            }
             resetCMSAuthSteps();
             document.getElementById('cmsAuthModal').classList.add('active');
         }
@@ -1848,6 +1962,13 @@
         function closeCMSAuthModal() {
             stopBombTimer();
             closeModal('cmsAuthModal');
+        }
+
+        function logoutCMS() {
+            isCMSAuthenticated = false;
+            sessionStorage.removeItem('portfolio_cms_auth');
+            closeModal('cmsDashboardModal');
+            showToast("Berhasil keluar dari sesi admin.");
         }
 
         function resetCMSAuthSteps() {
@@ -1963,6 +2084,8 @@
             // Jika kedua kabel benar telah dipotong (Kuning & Biru)
             if (cutWires.has('kuning') && cutWires.has('biru')) {
                 stopBombTimer();
+                isCMSAuthenticated = true;
+                sessionStorage.setItem('portfolio_cms_auth', 'true');
                 showToast("🎉 BOM BERHASIL DIDETEKSI & DIJINAKKAN! Akses CMS Diberikan.");
                 setTimeout(() => {
                     closeModal('cmsAuthModal');
@@ -2021,7 +2144,7 @@
             }
         }
 
-        function saveHeroSettings(e) {
+        async function saveHeroSettings(e) {
             e.preventDefault();
             
             localSettings.brandName = document.getElementById('cmsBrandNameInput').value.trim();
@@ -2043,47 +2166,50 @@
             localSettings.statRating = document.getElementById('cmsStatRating').value.trim();
             localSettings.aboutText = document.getElementById('cmsAboutTextInput').value.trim();
 
-            saveStorage(STORAGE_KEYS.SETTINGS, localSettings);
             renderHeroAndAbout();
-            showToast("Profil & warna berhasil diperbarui!");
+            await saveToFirestore(DOCS.SETTINGS, localSettings);
+            showToast("Profil & warna berhasil diperbarui ke cloud!");
         }
 
-        function addSkillFromCMS() {
+        async function addSkillFromCMS() {
             const input = document.getElementById('newSkillInput');
             const skillName = input.value.trim();
             if (!skillName) return;
 
             localSkills.push(skillName);
-            saveStorage(STORAGE_KEYS.SKILLS, localSkills);
             input.value = '';
             
             renderSkills();
             renderCMSSkills();
+            await saveToFirestore(DOCS.SKILLS, { list: localSkills });
             showToast(`Skill "${skillName}" ditambahkan!`);
         }
 
-        function removeSkillFromCMS(index) {
+        async function removeSkillFromCMS(index) {
             const removed = localSkills.splice(index, 1);
-            saveStorage(STORAGE_KEYS.SKILLS, localSkills);
             renderSkills();
             renderCMSSkills();
+            await saveToFirestore(DOCS.SKILLS, { list: localSkills });
             showToast(`Skill "${removed[0]}" dihapus.`);
         }
 
-        function resetToDefaultData() {
+        async function resetToDefaultData() {
             if (confirm("Apakah Anda yakin ingin mengembalikan semua data ke pengaturan default?")) {
                 localProjects = [...defaultProjects];
                 localSettings = { ...defaultHeroSettings };
                 localSkills = [...defaultSkills];
                 localMessages = [];
 
-                saveStorage(STORAGE_KEYS.PROJECTS, localProjects);
-                saveStorage(STORAGE_KEYS.SETTINGS, localSettings);
-                saveStorage(STORAGE_KEYS.SKILLS, localSkills);
-                saveStorage(STORAGE_KEYS.MESSAGES, localMessages);
-
                 renderAllContent();
                 openCMSDashboard();
+
+                await Promise.all([
+                    saveToFirestore(DOCS.PROJECTS, { list: localProjects }),
+                    saveToFirestore(DOCS.SETTINGS, localSettings),
+                    saveToFirestore(DOCS.SKILLS, { list: localSkills }),
+                    saveToFirestore(DOCS.MESSAGES, { list: localMessages })
+                ]);
+
                 showToast("Semua data berhasil di-reset ke default.");
             }
         }
@@ -2118,7 +2244,7 @@
             openProjectFormModal(id);
         }
 
-        function saveProjectFromCMS(e) {
+        async function saveProjectFromCMS(e) {
             e.preventDefault();
 
             const id = document.getElementById('projectFormId').value;
@@ -2140,27 +2266,27 @@
                 localProjects.unshift({ id: newId, title, category, image, tags, description, features, featured });
             }
 
-            saveStorage(STORAGE_KEYS.PROJECTS, localProjects);
             renderProjectsGrid();
             renderCMSProjectsTable();
             closeModal('cmsProjectFormModal');
-            showToast("Data project berhasil disimpan!");
+            await saveToFirestore(DOCS.PROJECTS, { list: localProjects });
+            showToast("Data project berhasil disimpan ke cloud!");
         }
 
-        function deleteProjectFromCMS(id) {
+        async function deleteProjectFromCMS(id) {
             if (confirm("Hapus project ini dari daftar?")) {
                 localProjects = localProjects.filter(p => p.id !== id);
-                saveStorage(STORAGE_KEYS.PROJECTS, localProjects);
                 renderProjectsGrid();
                 renderCMSProjectsTable();
+                await saveToFirestore(DOCS.PROJECTS, { list: localProjects });
                 showToast("Project berhasil dihapus.");
             }
         }
 
-        function deleteMessageFromCMS(id) {
+        async function deleteMessageFromCMS(id) {
             localMessages = localMessages.filter(m => m.id !== id);
-            saveStorage(STORAGE_KEYS.MESSAGES, localMessages);
             renderCMSInbox();
+            await saveToFirestore(DOCS.MESSAGES, { list: localMessages });
             showToast("Pesan berhasil dihapus.");
         }
 
@@ -2210,7 +2336,7 @@
             }
         }
 
-        function handleFormSubmit(e) {
+        async function handleFormSubmit(e) {
             e.preventDefault();
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
@@ -2225,9 +2351,9 @@
             };
 
             localMessages.unshift(newMessage);
-            saveStorage(STORAGE_KEYS.MESSAGES, localMessages);
-
+            renderCMSInbox();
             e.target.reset();
+            await saveToFirestore(DOCS.MESSAGES, { list: localMessages });
             showToast("Pesan Anda telah dikirim! Terima kasih.");
         }
 
@@ -2244,9 +2370,37 @@
             }, 3000);
         }
 
-        // DOM Event Listeners & Initial Load
-        document.addEventListener('DOMContentLoaded', () => {
+        // Expose functions globally for HTML inline events (onclick, onsubmit, onchange, etc.)
+        window.openCMSAuthModal = openCMSAuthModal;
+        window.closeCMSAuthModal = closeCMSAuthModal;
+        window.logoutCMS = logoutCMS;
+        window.resetCMSAuthSteps = resetCMSAuthSteps;
+        window.handleCMSAuthStep1 = handleCMSAuthStep1;
+        window.handleCMSAuthStep2 = handleCMSAuthStep2;
+        window.cutWire = cutWire;
+        window.openCMSDashboard = openCMSDashboard;
+        window.switchCMSTab = switchCMSTab;
+        window.saveHeroSettings = saveHeroSettings;
+        window.addSkillFromCMS = addSkillFromCMS;
+        window.removeSkillFromCMS = removeSkillFromCMS;
+        window.resetToDefaultData = resetToDefaultData;
+        window.openProjectFormModal = openProjectFormModal;
+        window.editProjectFromCMS = editProjectFromCMS;
+        window.saveProjectFromCMS = saveProjectFromCMS;
+        window.deleteProjectFromCMS = deleteProjectFromCMS;
+        window.deleteMessageFromCMS = deleteMessageFromCMS;
+        window.openModalDetail = openModalDetail;
+        window.closeModal = closeModal;
+        window.closeModalOnOverlay = closeModalOnOverlay;
+        window.handleFormSubmit = handleFormSubmit;
+        window.showToast = showToast;
+        window.syncColorInput = syncColorInput;
+        window.syncColorPicker = syncColorPicker;
+
+        // Initialization & DOM Listeners
+        function initApp() {
             renderAllContent();
+            setupFirestoreListeners();
 
             // Mobile Menu Toggle
             const menuToggle = document.getElementById('menuToggle');
@@ -2284,7 +2438,13 @@
                     applyCurrentFilterAndSearch();
                 });
             }
-        });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
     </script>
 </body>
 </html>
