@@ -1116,6 +1116,7 @@
                 <div class="filter-tabs" id="filterTabs">
                     <button class="filter-chip active" data-filter="all">Semua Project</button>
                     <button class="filter-chip" data-filter="web">Web App</button>
+                    <button class="filter-chip" data-filter="game">Mini Game</button>
                     <button class="filter-chip" data-filter="ui">UI/UX Design</button>
                     <button class="filter-chip" data-filter="mobile">Mobile</button>
                 </div>
@@ -1496,6 +1497,7 @@
                         <label class="form-label">Kategori</label>
                         <select id="projectFormCategorySelect" class="form-select" required>
                             <option value="web">Web Application</option>
+                            <option value="game">Mini Game / Canvas</option>
                             <option value="ui">UI/UX Design</option>
                             <option value="mobile">Mobile Application</option>
                         </select>
@@ -1590,17 +1592,28 @@
         const defaultProjects = [
             {
                 id: "project1",
-                title: "Portofolio Pou (Gemini AI)",
+                title: "Productivity Hub (Daily Tasks & Pomodoro)",
                 category: "web",
-                image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
-                tags: ["HTML5", "Vanilla JS", "Tailwind CSS"],
-                description: "Platform pemantauan analitik data penjualan real-time dengan sistem chart interaktif dan export laporan PDF.",
-                features: ["Visualisasi Data Interaktif", "Mode Gelap & Terang Otomatis", "Export Laporan ke Format PDF / CSV"],
+                image: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=800&q=80",
+                tags: ["HTML5", "Vanilla JS", "Tailwind CSS", "PWA"],
+                description: "Platform produktivitas lengkap dengan Todo List terorganisir, Pomodoro Focus Timer interaktif, dan Jurnal Refleksi harian.",
+                features: ["Manajemen Tugas & Kategori", "Pomodoro Timer Sesi 25 Menit & Istirahat", "Jurnal Refleksi Pembelajaran", "Mode Tampilan Smartphone & Layar Penuh Desktop"],
                 featured: true,
                 demoUrl: "https://d27rren.github.io/productivity-hub/"
             },
             {
                 id: "project2",
+                title: "Five Nights at Snake's (Fazbear Mini Game)",
+                category: "game",
+                image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80",
+                tags: ["HTML5 Canvas", "JavaScript", "Web Audio API", "Mobile D-Pad"],
+                description: "Mini game retro bertema FNAF Fazbear Pizzeria. Kendalikan ular animatronik memangsa 100 petak pizza dengan efek suara retro & wall glide.",
+                features: ["Mekanik Sudut Wall Glide", "Sound FX Retro Web Audio API", "Sistem Rekor Skor & Jam 6 AM Victory", "Dukungan Keyboard & Touch D-Pad HP"],
+                featured: true,
+                demoUrl: "https://d27rren.github.io/portofolio-ict/game.html"
+            },
+            {
+                id: "project3",
                 title: "Fintech Mobile Wallet App",
                 category: "ui",
                 image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80",
@@ -1611,7 +1624,7 @@
                 demoUrl: ""
             },
             {
-                id: "project3",
+                id: "project4",
                 title: "Modern E-Commerce Storefront",
                 category: "web",
                 image: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=800&q=80",
