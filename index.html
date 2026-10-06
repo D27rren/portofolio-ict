@@ -1507,6 +1507,11 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="form-label">Link Live Demo (URL Website / Demo)</label>
+                        <input type="url" id="projectFormDemoUrlInput" class="form-input" placeholder="https://example.com atau https://d27rren.github.io/...">
+                    </div>
+
+                    <div class="form-group">
                         <label class="form-label">Teknologi Digunakan (Pisahkan dengan koma)</label>
                         <input type="text" id="projectFormTagsInput" class="form-input" placeholder="React, Tailwind CSS, REST API" required>
                     </div>
@@ -1591,7 +1596,8 @@
                 tags: ["HTML5", "Vanilla JS", "Tailwind CSS"],
                 description: "Platform pemantauan analitik data penjualan real-time dengan sistem chart interaktif dan export laporan PDF.",
                 features: ["Visualisasi Data Interaktif", "Mode Gelap & Terang Otomatis", "Export Laporan ke Format PDF / CSV"],
-                featured: true
+                featured: true,
+                demoUrl: "https://d27rren.github.io/productivity-hub/"
             },
             {
                 id: "project2",
@@ -1601,7 +1607,8 @@
                 tags: ["Figma", "UI/UX", "Design System"],
                 description: "Desain interface dompet digital modern berfokus pada kemudahan transfer uang dan penganggaran otomatis.",
                 features: ["Sistem Komponen Figma Berbasis Variable", "Uji Usabilitas Pengguna", "Prototip Interaktif"],
-                featured: false
+                featured: false,
+                demoUrl: ""
             },
             {
                 id: "project3",
@@ -1611,7 +1618,8 @@
                 tags: ["Next.js", "TypeScript", "Stripe"],
                 description: "Toko online minimalis berkecepatan tinggi dilengkapi integrasi payment gateway dan filter produk serba cepat.",
                 features: ["Pencarian Produk Instan", "Integrasi Pembayaran Stripe Gateway", "Server-Side Rendering (SSR)"],
-                featured: true
+                featured: true,
+                demoUrl: ""
             }
         ];
 
@@ -1860,9 +1868,15 @@
                             <button class="btn-link" onclick="openModalDetail('${proj.id}')">
                                 Detail Project <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
                             </button>
-                            <a href="#" class="btn-icon-only" title="Source Code">
-                                <i data-lucide="external-link" style="width: 18px; height: 18px;"></i>
-                            </a>
+                            ${proj.demoUrl ? `
+                                <a href="${proj.demoUrl}" target="_blank" rel="noopener noreferrer" class="btn-icon-only" title="Play Live Demo">
+                                    <i data-lucide="external-link" style="width: 18px; height: 18px;"></i>
+                                </a>
+                            ` : `
+                                <button class="btn-icon-only" onclick="openModalDetail('${proj.id}')" title="Detail Project">
+                                    <i data-lucide="external-link" style="width: 18px; height: 18px;"></i>
+                                </button>
+                            `}
                         </div>
                     </div>
                 </article>
@@ -2227,6 +2241,7 @@
                     document.getElementById('projectFormTitleInput').value = proj.title;
                     document.getElementById('projectFormCategorySelect').value = proj.category;
                     document.getElementById('projectFormImageInput').value = proj.image;
+                    document.getElementById('projectFormDemoUrlInput').value = proj.demoUrl || '';
                     document.getElementById('projectFormTagsInput').value = (proj.tags || []).join(', ');
                     document.getElementById('projectFormDescInput').value = proj.description;
                     document.getElementById('projectFormFeaturesInput').value = (proj.features || []).join('\n');
@@ -2235,6 +2250,7 @@
             } else {
                 formTitle.textContent = "Tambah Project Baru";
                 document.getElementById('projectFormId').value = '';
+                document.getElementById('projectFormDemoUrlInput').value = '';
             }
 
             document.getElementById('cmsProjectFormModal').classList.add('active');
@@ -2251,6 +2267,7 @@
             const title = document.getElementById('projectFormTitleInput').value.trim();
             const category = document.getElementById('projectFormCategorySelect').value;
             const image = document.getElementById('projectFormImageInput').value.trim();
+            const demoUrl = document.getElementById('projectFormDemoUrlInput').value.trim();
             const tags = document.getElementById('projectFormTagsInput').value.split(',').map(t => t.trim()).filter(Boolean);
             const description = document.getElementById('projectFormDescInput').value.trim();
             const features = document.getElementById('projectFormFeaturesInput').value.split('\n').map(f => f.trim()).filter(Boolean);
@@ -2259,11 +2276,11 @@
             if (id) {
                 const index = localProjects.findIndex(p => p.id === id);
                 if (index !== -1) {
-                    localProjects[index] = { id, title, category, image, tags, description, features, featured };
+                    localProjects[index] = { id, title, category, image, demoUrl, tags, description, features, featured };
                 }
             } else {
                 const newId = 'project_' + Date.now();
-                localProjects.unshift({ id: newId, title, category, image, tags, description, features, featured });
+                localProjects.unshift({ id: newId, title, category, image, demoUrl, tags, description, features, featured });
             }
 
             renderProjectsGrid();
@@ -2311,12 +2328,15 @@
                 ` : ''}
 
                 <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                    <a href="#" class="btn btn-primary btn-sm" style="flex: 1;">
-                        <i data-lucide="globe" style="width: 14px; height: 14px;"></i> Live Demo
-                    </a>
-                    <a href="#" class="btn btn-outline btn-sm" style="flex: 1;">
-                        <i data-lucide="github" style="width: 14px; height: 14px;"></i> Repository Kode
-                    </a>
+                    ${proj.demoUrl ? `
+                        <a href="${proj.demoUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="flex: 1; text-decoration: none; justify-content: center; display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; font-weight: 600;">
+                            <i data-lucide="play" style="width: 16px; height: 16px; fill: currentColor;"></i> Play Live Demo
+                        </a>
+                    ` : `
+                        <button onclick="showToast('Link Live Demo belum disetel di Admin Panel')" class="btn btn-outline" style="flex: 1; opacity: 0.7; justify-content: center; display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px;">
+                            <i data-lucide="play" style="width: 16px; height: 16px;"></i> Live Demo Belum Ditambahkan
+                        </button>
+                    `}
                 </div>
             `;
 
